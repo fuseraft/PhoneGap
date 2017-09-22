@@ -13,3 +13,11 @@
 .statusbar-overlay {
     background: #000000;
 }
+
+.message {
+  background-color: #abcdef;
+  margin: 5px;
+  border-radius: 5px;
+  text-align: center;
+  width: 50%;
+}

@@ -11,6 +11,7 @@ var backgroundService;
 
 BackgroundService.prototype._isInitialized = false;
 BackgroundService.prototype._backButtonClickCount = 0;
+BackgroundService.prototype._status = 0;
 
 BackgroundService.prototype.enable = function () {
   cordova.plugins.backgroundMode.setEnabled(true);
@@ -82,6 +83,7 @@ BackgroundService.prototype.start = function () {
     this.moveToBack();
     this.overrideBackButton();
   }
+  this._status = 1;
 };
 
 BackgroundService.prototype.stop = function () {
@@ -89,7 +91,41 @@ BackgroundService.prototype.stop = function () {
     this.moveToFront();
     this.disable();
   }
-}
+  this._status = 0;
+};
+
+BackgroundService.prototype.toggleStatus = function () {
+  if (!!this._status) {
+    this.stop();
+  }
+  else {
+    this.start();
+  }
+};
+
+var Logger = {
+  log: function (message) {
+    $$('#log').append('<div class="message">' + message + '</div>');
+  }
+};
+
+var App = {
+  listener: null,
+  pollingMS: 1000 * 5,
+  stop: function () {
+    clearInterval(this.listener);
+    this.listener = null;
+  },
+  start: function (callback) {
+    this.listener = setInterval(function () {
+      Logger.log('intervaling @ ' + new Date(Date.now()).toUTCString());
+      // call the callback
+      if (callback && typeof callback === 'function') {
+        callback();
+      }
+    }, this.pollingMS);
+  }
+};
 
 // Add view
 var mainView = myApp.addView('.view-main', {
@@ -100,21 +136,24 @@ var mainView = myApp.addView('.view-main', {
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
     backgroundService = new BackgroundService();
+    try {
+      $$('#clearlog').on('click', function () {
+        $$('#log div').remove();
+      });
 
-    document.addEventListener('backbutton', function () {
-      // when the user presses the back button
-      // increment this counter
-      ++backgroundService._backButtonClickCount;
+      $$('#startbackground').on('click', function () {
+        var status = !!parseInt($$('#startbackground').attr('data-status'));
+        var text = status ? 'Start Background' : 'Stop Background';
 
-      // when the user clicks the backbutton 5 times, bring the app to the front
-      if (backgroundService._backButtonClickCount === 5) {
-        backgroundService._backButtonClickCount = 0;
-        backgroundService.stop();
-      }
-      else {
-        backgroundService.start();
-      }
+        $$('#startbackground').attr('data-status', !status).text(text);
+
+        backgroundService.toggleStatus();
+      });
     });
+  }
+  catch (err) {
+    Logger.log('ERROR: ' + err.message);
+  }
 }, false);
 
 
@@ -123,7 +162,6 @@ $$(document).on('deviceready', function() {
 // Option 1. Using page callback for page (for "about" page in this case) (recommended way):
 myApp.onPageInit('about', function (page) {
     // Do something here for "about" page
-
 })
 
 // Option 2. Using one 'pageInit' event handler for all pages:

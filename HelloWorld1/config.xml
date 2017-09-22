@@ -25,9 +25,10 @@
         <preference name="BackupWebStorage" value="none" />
     </platform>
     <preference name="DisallowOverscroll" value="true" />
-    <plugin name="cordova-plugin-whitelist" spec="~1.2.0" />
-    <plugin name="cordova-plugin-console" spec="~1.0.1" />
-    <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
+    <engine name="android" spec="~6.2.3" />
     <plugin name="cordova-plugin-background-mode" spec="~0.7.2" />
+    <plugin name="cordova-plugin-console" spec="~1.0.1" />
     <plugin name="cordova-plugin-geolocation" spec="~2.4.3" />
+    <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
+    <plugin name="cordova-plugin-whitelist" spec="~1.2.0" />
 </widget>
