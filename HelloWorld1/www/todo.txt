@@ -2,17 +2,7 @@
 // TODO: scs - 20170918-0731PM
 //////////////////////////////////////////////////////////
 
-Got the backgroundMode Cordova plugin installed and a class for interfacing with it written.
-
 Need to figure out how to store GPS points in SQLite database/LocalDB/localStorage/sessionStorage.
-
-Got a framework for toggling app state, turning on and off the background service.
-
-//////////////////////////////////////////////////////////
-// Toggle App State
-//////////////////////////////////////////////////////////
-
-https://github.com/katzer/cordova-plugin-background-mode/issues/281
 
 //////////////////////////////////////////////////////////
 // Database
@@ -26,9 +16,3 @@ background-service context versus typical browser-based persistence strategies.
 //////////////////////////////////////////////////////////
 
 We will need a web service (REST WebAPI/SOAP WCF) to consume JSON from this app.
-
-//////////////////////////////////////////////////////////
-// GPS
-//////////////////////////////////////////////////////////
-
-What Cordova/PhoneGap plugins exist for retrieving accurate GPS points?

@@ -14,10 +14,22 @@
     background: #000000;
 }
 
-.message {
-  background-color: #abcdef;
+/* general shared style for messages and errors */
+.log-message, .log-error {
   margin: 5px;
   border-radius: 5px;
   text-align: center;
-  width: 50%;
+}
+
+/* regular logs are light blue with normal black text */
+.log-message {
+  background-color: #abcdef;
+  font-weight: normal;
+}
+
+/* errors are light red with bold white text */
+.log-error {
+  background-color: #e06059;
+  color: #fff;
+  font-weight: bold;
 }

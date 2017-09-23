@@ -1,173 +1,92 @@
 // Initialize app
 var myApp = new Framework7();
 
-
 // If we need to use custom DOM library, let's save it to $$ variable:
 var $$ = Dom7;
-
-/* Custom methods */
-function BackgroundService() {};
-var backgroundService;
-
-BackgroundService.prototype._isInitialized = false;
-BackgroundService.prototype._backButtonClickCount = 0;
-BackgroundService.prototype._status = 0;
-
-BackgroundService.prototype.enable = function () {
-  cordova.plugins.backgroundMode.setEnabled(true);
-};
-
-BackgroundService.prototype.disable = function () {
-  cordova.plugins.backgroundMode.setEnabled(false);
-};
-
-BackgroundService.prototype.isActive = function () {
-  return cordova.plugins.backgroundMode.isActive();
-};
-
-BackgroundService.prototype.isForeground = function () {
-  return !this.isActive();
-};
-
-BackgroundService.prototype.isBackground = function () {
-  return this.isActive();
-};
-
-BackgroundService.prototype.moveToBack = function () {
-  cordova.plugins.backgroundMode.moveToBackground();
-};
-
-BackgroundService.prototype.moveToFront = function () {
-  cordova.plugins.backgroundMode.moveToForeground();
-};
-
-BackgroundService.prototype.excludeFromRecentTasks = function () {
-  try {
-    cordova.plugins.backgroundMode.excludeFromTaskList();
-  }
-  catch (err) { /* ignored */ }
-};
-
-BackgroundService.prototype.overrideBackButton = function () {
-  cordova.plugins.backgroundMode.overrideBackButton();
-};
-
-BackgroundService.prototype.wakeUp = function () {
-  cordova.plugins.backgroundMode.wakeUp();
-};
-
-BackgroundService.prototype.unlock = function () {
-  cordova.plugins.backgroundMode.unlock();
-};
-
-BackgroundService.prototype.enableQuirksMode = function () {
-  if (this._isInitialized) {
-    return;
-  }
-
-  cordova.plugins.backgroundMode.on('activate', function() {
-    try {
-      cordova.plugins.backgroundMode.disableWebViewOptimizations();
-    }
-    catch (err) { /* could not enable quirks mode */ }
-  });
-
-  this._isInitialized = true;
-};
-
-BackgroundService.prototype.start = function () {
-  if (this.isForeground()) {
-    this.enableQuirksMode();
-    this.enable();
-    this.excludeFromRecentTasks();
-    this.moveToBack();
-    this.overrideBackButton();
-  }
-  this._status = 1;
-};
-
-BackgroundService.prototype.stop = function () {
-  if (this.isBackground()) {
-    this.moveToFront();
-    this.disable();
-  }
-  this._status = 0;
-};
-
-BackgroundService.prototype.toggleStatus = function () {
-  if (!!this._status) {
-    this.stop();
-  }
-  else {
-    this.start();
-  }
-};
-
-var Logger = {
-  log: function (message) {
-    $$('#log').append('<div class="message">' + message + '</div>');
-  }
-};
 
 var App = {
   listener: null,
   pollingMS: 10000,
+  getUTCTime: function () {
+    return new Date(Date.now()).toUTCString();
+  },
   stop: function () {
+    Logger.log('poll stopped @ ' + this.getUTCTime());
     clearInterval(this.listener);
     this.listener = null;
   },
-  start: function (callback) {
+  start: function (callback, silent) {
+    Logger.log('poll started @ ' + this.getUTCTime());
     this.listener = setInterval(function () {
-      Logger.log('intervaling @ ' + new Date(Date.now()).toUTCString());
+      if (!silent) {
+        Logger.log('interval @ ' + this.getUTCTime());
+      }
       // call the callback
       if (callback && typeof callback === 'function') {
         callback();
       }
     }, this.pollingMS);
+  },
+  getCoordinates: function () {
+    // if an error occurs, show an error on the map
+    var onError = function (e) {
+      Logger.log('Error in getCoordinates: ' + JSON.stringify(e));
+    };
+
+    var onSuccess = function(e) {
+      if (e && e.coords) {
+        Logger.log(
+          'coordinates at ['
+          + e.coords.latitude
+          + ','
+          + e.coords.longitude
+          + ']'
+        );
+      }
+    }
+
+    navigator.geolocation.getCurrentPosition(onSuccess, onError);
   }
 };
+
+// Handle Cordova Device Ready Event
+$$(document).on('deviceready', function() {
+  try {
+    $$('#clearlog').on('click', function () {
+      $$('#log div').remove();
+    });
+
+    // user clicked the Get Location button
+    $$('#location').on('click', function() {
+      if (App.listener) {
+        App.stop();
+        $$('#location').text('Log Location');
+      }
+      else {
+        App.start(App.getCoordinates, true);
+        $$('#location').text('Logging Location...');
+      }
+    });
+
+    $$('#startbackground').on('click', function () {
+      Background.toggleStatus();
+
+      //var status = !!parseInt($$('#startbackground').attr('data-status'));
+      var status = !!Background.getStatus();
+      var text = !status ? 'Start Background' : 'Stop Background';
+
+      $$('#startbackground').text(text);
+    });
+  } catch (err) {
+      Logger.log('ERROR: ' + err.message);
+  }
+}, false);
 
 // Add view
 var mainView = myApp.addView('.view-main', {
     // Because we want to use dynamic navbar, we need to enable it for this view:
     dynamicNavbar: true
 });
-
-// Handle Cordova Device Ready Event
-$$(document).on('deviceready', function() {
-  backgroundService = new BackgroundService();
-  try {
-    $$('#clearlog').on('click', function () {
-      $$('#log div').remove();
-    });
-
-
-
-    $$('#location').on('click',function(){
-
-        var onError = function (e){alert('Error');}
-        var onSuccess = function(e){alert(e.toString());}
-        navigator.geolocation.getCurrentPosition(onSuccess,onError);
-
-      });
-
-    $$('#startbackground').on('click', function () {
-      var status = !!parseInt($$('#startbackground').attr('data-status'));
-      var text = status ? 'Start Background' : 'Stop Background';
-
-      $$('#startbackground').attr('data-status', !status).text(text);
-
-      backgroundService.toggleStatus();
-    });
-
-  } catch (err) {
-      Logger.log('ERROR: ' + err.message);
-  }
-},false);
-
-
-
-
 
 // Now we need to run the code that will be executed only for About page.
 
