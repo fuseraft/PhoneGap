@@ -10,7 +10,7 @@
             * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
                 * Enable inline JS: add 'unsafe-inline' to default-src
         -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+  <!--  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
 
     <!-- Required meta tags-->
     <meta charset="utf-8">
@@ -31,9 +31,15 @@
     <link rel="stylesheet" href="lib/framework7/css/framework7.ios.colors.min.css">
 
     <link rel="stylesheet" href="css/styles.css">
+
+
+
+
 </head>
 
 <body>
+
+test1
     <!-- Status bar overlay for full screen mode (PhoneGap) -->
     <div class="statusbar-overlay"></div>
 
@@ -75,6 +81,7 @@
                             <div>
                               <button id="clearlog">Clear Log</button>
                               <button id="startbackground" data-status="0">Start Background</button>
+                              <button id="location" type="button">Log Location</button>
                             </div>
                             <div id="log"></div>
                             <!-- Link to another page -->
@@ -97,6 +104,10 @@
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="lib/framework7/js/framework7.min.js"></script>
     <script type="text/javascript" src="js/my-app.js"></script>
+    <script type="text/javascript">
+
+
+    </script>
 </body>
 
 </html>

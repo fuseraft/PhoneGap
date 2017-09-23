@@ -111,7 +111,7 @@ var Logger = {
 
 var App = {
   listener: null,
-  pollingMS: 1000 * 5,
+  pollingMS: 10000,
   stop: function () {
     clearInterval(this.listener);
     this.listener = null;
@@ -135,26 +135,38 @@ var mainView = myApp.addView('.view-main', {
 
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
-    backgroundService = new BackgroundService();
-    try {
-      $$('#clearlog').on('click', function () {
-        $$('#log div').remove();
-      });
-
-      $$('#startbackground').on('click', function () {
-        var status = !!parseInt($$('#startbackground').attr('data-status'));
-        var text = status ? 'Start Background' : 'Stop Background';
-
-        $$('#startbackground').attr('data-status', !status).text(text);
-
-        backgroundService.toggleStatus();
-      });
+  backgroundService = new BackgroundService();
+  try {
+    $$('#clearlog').on('click', function () {
+      $$('#log div').remove();
     });
+
+
+
+    $$('#location').on('click',function(){
+
+        var onError = function (e){alert('Error');}
+        var onSuccess = function(e){alert(e.toString());}
+        navigator.geolocation.getCurrentPosition(onSuccess,onError);
+
+      });
+
+    $$('#startbackground').on('click', function () {
+      var status = !!parseInt($$('#startbackground').attr('data-status'));
+      var text = status ? 'Start Background' : 'Stop Background';
+
+      $$('#startbackground').attr('data-status', !status).text(text);
+
+      backgroundService.toggleStatus();
+    });
+
+  } catch (err) {
+      Logger.log('ERROR: ' + err.message);
   }
-  catch (err) {
-    Logger.log('ERROR: ' + err.message);
-  }
-}, false);
+},false);
+
+
+
 
 
 // Now we need to run the code that will be executed only for About page.
