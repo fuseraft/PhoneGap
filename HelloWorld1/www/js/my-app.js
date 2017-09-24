@@ -4,6 +4,7 @@ var myApp = new Framework7();
 // If we need to use custom DOM library, let's save it to $$ variable:
 var $$ = Dom7;
 
+
 var App = {
   listener: null,
   pollingMS: 10000,
@@ -16,7 +17,7 @@ var App = {
     this.listener = null;
   },
   start: function (callback, silent) {
-    Logger.log('poll started @ ' + this.getUTCTime());
+    Logger.log('poll started @ ' + this.getUTCTime()+ 'set at '+App.pollingMS+' seconds');
     this.listener = setInterval(function () {
       if (!silent) {
         Logger.log('interval @ ' + this.getUTCTime());
@@ -36,7 +37,7 @@ var App = {
     var onSuccess = function(e) {
       if (e && e.coords) {
         Logger.log(
-          'coordinates at ['
+          new Date(Date.now())+'coordinates at ['
           + e.coords.latitude
           + ','
           + e.coords.longitude
@@ -44,7 +45,6 @@ var App = {
         );
       }
     }
-
     navigator.geolocation.getCurrentPosition(onSuccess, onError);
   }
 };
@@ -56,6 +56,15 @@ $$(document).on('deviceready', function() {
       $$('#log div').remove();
     });
 
+//open email client to attach cords.
+
+    $$('#emailLog').on('click',function(){
+        var theLog = document.getElementById("log").innerText.toString();
+      console.log(theLog);
+    window.open('mailto:shortdude18@gmail.com?subject=Cords&body='+theLog);
+
+
+    });
     // user clicked the Get Location button
     $$('#location').on('click', function() {
       if (App.listener) {
