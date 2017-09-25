@@ -11,7 +11,8 @@
             "cordova-plugin-console": {},
             "cordova-plugin-geolocation": {},
             "cordova-plugin-statusbar": {},
-            "cordova-plugin-whitelist": {}
+            "cordova-plugin-whitelist": {},
+            "cordova-sqlite-storage": {}
         }
     },
     "dependencies": {
@@ -20,6 +21,7 @@
         "cordova-plugin-console": "~1.0.1",
         "cordova-plugin-geolocation": "~2.4.3",
         "cordova-plugin-statusbar": "~1.0.1",
-        "cordova-plugin-whitelist": "~1.2.0"
+        "cordova-plugin-whitelist": "~1.2.0",
+        "cordova-sqlite-storage": "^2.0.4"
     }
 }

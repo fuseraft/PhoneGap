@@ -41,7 +41,7 @@
     <!-- Left panel with reveal effect-->
     <div class="panel panel-left panel-reveal">
         <div class="content-block">
-            <p>Left panel content goes here</p>
+            <!--<p>Left panel content goes here</p>-->
         </div>
     </div>
 
@@ -70,19 +70,19 @@
                     <!-- Scrollable page content -->
                     <div class="page-content">
                         <div class="content-block">
-                            <p>Page content goes here</p>
-                            <div>
-                              <button id="clearlog">Clear Log</button>
-                              <button id="startbackground">Start Background</button>
-                              <button id="location" type="button">Log Location</button>
+                            <!--<p>Page content goes here</p>-->
+                            <div class="buttons-row">
+                              <button id="clearlog" class="button">Clear Log</button>
+                              <button id="startbackground" class="button">Start Background</button>
+                              <button id="location" class="button">Log Location</button>
                             </div>
-                            <div >
-                              <button id="emailLog" type="button">Email log</button>
-
+                            <div class="buttons-row">
+                              <button id="emailLog" class="button">Email log</button>
+                              <button id="test-sqlite" class="button">Test SQLite</button>
                             </div>
                             <div id="log"></div>
                             <!-- Link to another page -->
-                            <a href="about.html">About app</a>
+                            <!--<a href="about.html">About app</a>-->
                         </div>
                     </div>
                 </div>
@@ -91,8 +91,8 @@
             <div class="toolbar">
                 <div class="toolbar-inner">
                     <!-- Toolbar links -->
-                    <a href="#" class="link">Link 1</a>
-                    <a href="#" class="link">Link 2</a>
+                    <!--<a href="#" class="link">Link 1</a>
+                    <a href="#" class="link">Link 2</a>-->
                 </div>
             </div>
         </div>
@@ -102,6 +102,9 @@
     <script type="text/javascript" src="lib/framework7/js/framework7.min.js"></script>
     <script type="text/javascript" src="js/logger.js"></script>
     <script type="text/javascript" src="js/background-service.js?v=20170923001scs"></script>
+    <script type="text/javascript" src="js/sqlite/sqlite-params.js?v=20170924002scs"></script>
+    <script type="text/javascript" src="js/sqlite/sqlite.js"></script>
+    <script type="text/javascript" src="js/polling.js"></script>
     <script type="text/javascript" src="js/my-app.js"></script>
 </body>
 </html>

@@ -4,51 +4,6 @@ var myApp = new Framework7();
 // If we need to use custom DOM library, let's save it to $$ variable:
 var $$ = Dom7;
 
-
-var App = {
-  listener: null,
-  pollingMS: 10000,
-  getUTCTime: function () {
-    return new Date(Date.now()).toUTCString();
-  },
-  stop: function () {
-    Logger.log('poll stopped @ ' + this.getUTCTime());
-    clearInterval(this.listener);
-    this.listener = null;
-  },
-  start: function (callback, silent) {
-    Logger.log('poll started @ ' + this.getUTCTime()+ 'set at '+App.pollingMS+' seconds');
-    this.listener = setInterval(function () {
-      if (!silent) {
-        Logger.log('interval @ ' + this.getUTCTime());
-      }
-      // call the callback
-      if (callback && typeof callback === 'function') {
-        callback();
-      }
-    }, this.pollingMS);
-  },
-  getCoordinates: function () {
-    // if an error occurs, show an error on the map
-    var onError = function (e) {
-      Logger.log('Error in getCoordinates: ' + JSON.stringify(e));
-    };
-
-    var onSuccess = function(e) {
-      if (e && e.coords) {
-        Logger.log(
-          new Date(Date.now())+'coordinates at ['
-          + e.coords.latitude
-          + ','
-          + e.coords.longitude
-          + ']'
-        );
-      }
-    }
-    navigator.geolocation.getCurrentPosition(onSuccess, onError);
-  }
-};
-
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
   try {
@@ -56,23 +11,21 @@ $$(document).on('deviceready', function() {
       $$('#log div').remove();
     });
 
-//open email client to attach cords.
-
+    // open email client to attach cords.
     $$('#emailLog').on('click',function(){
-        var theLog = document.getElementById("log").innerText.toString();
+      var theLog = document.getElementById("log").innerText.toString();
       console.log(theLog);
-    window.open('mailto:shortdude18@gmail.com?subject=Cords&body='+theLog);
-
-
+      window.open('mailto:shortdude18@gmail.com?subject=Cords&body='+theLog);
     });
+
     // user clicked the Get Location button
     $$('#location').on('click', function() {
-      if (App.listener) {
-        App.stop();
+      if (Poll.listener) {
+        Poll.stop();
         $$('#location').text('Log Location');
       }
       else {
-        App.start(App.getCoordinates, true);
+        Poll.start(Poll.getCoordinates, true);
         $$('#location').text('Logging Location...');
       }
     });
@@ -80,11 +33,14 @@ $$(document).on('deviceready', function() {
     $$('#startbackground').on('click', function () {
       Background.toggleStatus();
 
-      //var status = !!parseInt($$('#startbackground').attr('data-status'));
       var status = !!Background.getStatus();
       var text = !status ? 'Start Background' : 'Stop Background';
 
       $$('#startbackground').text(text);
+    });
+
+    $$('#test-sqlite').on('click', function () {
+      Sqlite.test();
     });
   } catch (err) {
       Logger.log('ERROR: ' + err.message);
