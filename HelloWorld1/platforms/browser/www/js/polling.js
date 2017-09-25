@@ -10,7 +10,7 @@ var Poll = {
     this.listener = null;
   },
   start: function (callback, silent) {
-    Logger.log('poll started @ ' + this.getUTCTime() + ', polling on ' + App.pollingMS + ' second intervals');
+    Logger.log('poll started @ ' + this.getUTCTime() + ', polling on ' + this.pollingMS + ' second intervals');
     this.listener = setInterval(function () {
       if (!silent) {
         Logger.log('poll interval @ ' + this.getUTCTime());
