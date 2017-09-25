@@ -75,6 +75,14 @@ SqliteParams.prototype.add = function (name, type, value) {
   this.params.push(param);
 };
 
+SqliteParams.prototype.sanitizeString = function (s) {
+  if (!s || typeof s !== 'string' || s.length === 0) {
+    return '';
+  }
+
+  return s.replace(/'/g, '\\\'');
+};
+
 SqliteParams.prototype.parameterize = function (query) {
   var name = null,
       param = null,
@@ -105,6 +113,10 @@ SqliteParams.prototype.parameterize = function (query) {
         // if this is a Date object, set value to valid Sqlite date string
         if (value && typeof value.getDate === 'function') {
           value = value.toSqliteString();
+        }
+        // if this is a string value, sanitize it to prevent SQL injection
+        else {
+          value = this.sanitizeString(value);
         }
 
         // if the value is not null, wrap in single quotes
