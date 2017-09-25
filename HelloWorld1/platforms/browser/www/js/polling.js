@@ -10,7 +10,7 @@ var Poll = {
     this.listener = null;
   },
   start: function (callback, silent) {
-    Logger.log('poll started @ ' + this.getUTCTime() + ', polling on ' + this.pollingMS + ' second intervals');
+    Logger.log('poll started @ ' + this.getUTCTime() + ', polling on ' + (this.pollingMS / 1000) + ' second intervals');
     this.listener = setInterval(function () {
       if (!silent) {
         Logger.log('poll interval @ ' + this.getUTCTime());
@@ -28,14 +28,13 @@ var Poll = {
     };
 
     var onSuccess = function(e) {
+      var lat, long, time = Poll.getUTCTime();
+
       if (e && e.coords) {
-        Logger.log(
-          new Date(Date.now())+'coordinates at ['
-          + e.coords.latitude
-          + ','
-          + e.coords.longitude
-          + ']'
-        );
+        lat = e.coords.latitude;
+        long = e.coords.longitude;
+        
+        Logger.log(time + ', coordinates at [' + lat + ',' + long + ']');
       }
     }
     navigator.geolocation.getCurrentPosition(onSuccess, onError);
