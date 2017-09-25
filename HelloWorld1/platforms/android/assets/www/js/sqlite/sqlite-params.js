@@ -3,7 +3,7 @@
 Date.prototype.toSqliteString = function () {
   var value = new Date(this.valueOf()),
     year = '' + value.getFullYear(),
-    month = value.getMonth(),
+    month = value.getMonth() + 1,
     day = value.getDate(),
     h = value.getHours(),
     m = value.getMinutes(),

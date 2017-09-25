@@ -7,7 +7,6 @@ var Sqlite = {
     Logger.error('SQLite error: ' + message);
   },
   test: function () {
-    this.log('testing SQLite');
     try {
       // open the db and create a Test table if it doesn't exist
       this.log('opening the db');
@@ -26,9 +25,7 @@ var Sqlite = {
       // build a DROP statement
       var drop = new SqliteQuery('DROP TABLE Test');
 
-      this.log('built INSERT: <code>' + insert.toString() + '</code>')
-      this.log('built SELECT: <code>' + select.toString() + '</code>')
-      this.log('built DROP: <code>' + drop.toString() + '</code>')
+      this.log('built INSERT: <code>' + insert.toString() + '</code>');
 
       this.log('building SqliteParams');
       // create param container
@@ -43,9 +40,8 @@ var Sqlite = {
       this.log('parameterized INSERT: <code>' + insert.toString() + '</code>');
 
       // execute the insert, select data from it and print a JSON-serialized result set
-      this.log('executing INSERT');
+      this.log('executing INSERT and SELECT');
       this.exec(insert.toString());
-      this.log('executing SELECT');
       this.exec(select.toString(), function (rs) {
         Sqlite.log('result set: <code>' + JSON.stringify(rs) + '</code>');
       });
@@ -53,7 +49,6 @@ var Sqlite = {
       // drop the table and close the db
       this.log('executing DROP');
       this.exec(drop.toString());
-      this.log('closing the db');
     }
     catch (err) {
       Logger.error(err.message);
