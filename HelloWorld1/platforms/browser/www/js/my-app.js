@@ -53,6 +53,7 @@ $$(document).on('deviceready', function() {
     });
 
     $$('#btn-write-sqlite').on('click', function () {
+      // Geolocation.resetCoordinates();
       Geolocation.toggleSqliteWrite();
 
       $$('#btn-write-sqlite').text(
@@ -64,7 +65,45 @@ $$(document).on('deviceready', function() {
 
     $$('#btn-read-sqlite').on('click', function () {
       Geolocation.readCoordinates(function (rs) {
-        Sqlite.log('result set: <code>' + JSON.stringify(rs) + '</code>');
+        // iterate the table data and build a Framework7 plain datatable
+        try {
+          var i, len = rs.rows.length, row, data = '';
+
+          data +=
+            '<thead>\
+              <tr>\
+                <th class="label-cell">Poll</th>\
+                <th class="label-cell">Lat</th>\
+                <th class="label-cell">Long</th>\
+              </tr>\
+            </thead>\
+            <tbody>'
+
+          for (i = 0; i < len; i++) {
+            row = rs.rows.item(i);
+            data +=
+              '<tr>' +
+                '<td class="label-cell">' + row.Poll + '</td>' +
+                '<td class="numeric-cell">' + row.Latitude + '</td>' +
+                '<td class="numeric-cell">' + row.Longitude + '</td>' +
+              '</tr>';
+          }
+
+          data += '</tbody>';
+
+          data =
+            '<div class="data-table">' +
+              '<table>' +
+                data +
+              '</table>' +
+            '</div>';
+
+          Sqlite.log(
+            '<div class="data-table"><table>' + data + '</table>');
+        }
+        catch (err) {
+          Sqlite.error(err.message);
+        }
       });
     });
   } catch (err) {

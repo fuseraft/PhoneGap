@@ -89,16 +89,18 @@ var Geolocation = {
     try {
       Geolocation.ensureGPSCoordinatesTableExists(true);
 
+      /*
+      * uncomment where clause when finished testing
+      * the following code will be used to pull
+      * only the unsent data.
+      *
+      * we need to alter the table to add a Sent flag
+      */
       select = new SqliteQuery(
         'SELECT * ' +
         'FROM GPSCoordinates ' +
-        '-- WHERE poll > @LastRetrieval'
+        '-- WHERE Sent = 0'
       );
-
-      // uncomment when finished testing
-      //params = new SqliteParams();
-      //params.add('@LastRetrieval', SqliteTypes.DATETIME, new Date(Date.now()));
-      //params.parameterize(select);
 
       if (!resultCallback || typeof resultCallback !== 'function') {
         resultCallback = function (rs) {
@@ -114,25 +116,35 @@ var Geolocation = {
 
     return coords;
   },
+  resetCoordinates: function () {
+    // this deletes the table data
+    this.ensureGPSCoordinatesTableExists();
+    Sqlite.exec('DELETE FROM GPSCoordinates')
+  },
   onError: function (e) {
     // if an error occurs, show an error on the map
     Geolocation.error('error in getCoordinates: ' + JSON.stringify(e));
   },
   onSuccess: function (e) {
-    if (e && e.coords) {
-      var time = new Date(Date.now()),
-        lat = e.coords.latitude,
-        long = e.coords.longitude;
+    try {
+      if (e && e.coords) {
+        var time = new Date(Date.now()),
+          lat = e.coords.latitude.toString(),
+          long = e.coords.longitude.toString();
 
-      Geolocation.log(time + ', coordinates at [' + lat + ',' + long + ']');
+        Geolocation.log(time + ', coordinates at [' + lat + ',' + long + ']');
 
-      // write to sqlite
-      if (Geolocation.canWriteToSqlite()) {
-        Geolocation.writeCoordinates(time, lat, long);
+        // write to sqlite
+        if (Geolocation.canWriteToSqlite()) {
+          Geolocation.writeCoordinates(time, lat, long);
+        }
+      }
+      else {
+        Geolocation.error('could not retrieve coordinates');
       }
     }
-    else {
-      Geolocation.error('could not retrieve coordinates');
+    catch (err) {
+      Geolocation.error(err.message);
     }
   },
   getCoordinates: function () {
