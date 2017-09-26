@@ -21,22 +21,4 @@ var Poll = {
       }
     }, this.pollingMS);
   },
-  getCoordinates: function () {
-    // if an error occurs, show an error on the map
-    var onError = function (e) {
-      Logger.error('Error in getCoordinates: ' + JSON.stringify(e));
-    };
-
-    var onSuccess = function(e) {
-      var lat, long, time = Poll.getUTCTime();
-
-      if (e && e.coords) {
-        lat = e.coords.latitude;
-        long = e.coords.longitude;
-        
-        Logger.log(time + ', coordinates at [' + lat + ',' + long + ']');
-      }
-    }
-    navigator.geolocation.getCurrentPosition(onSuccess, onError);
-  }
 };

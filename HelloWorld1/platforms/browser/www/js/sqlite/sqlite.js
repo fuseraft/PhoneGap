@@ -41,24 +41,31 @@ var Sqlite = {
 
       // execute the insert, select data from it and print a JSON-serialized result set
       this.log('executing INSERT and SELECT');
-      this.exec(insert.toString());
-      this.exec(select.toString(), function (rs) {
+      this.exec(insert);
+      this.exec(select, function (rs) {
         Sqlite.log('result set: <code>' + JSON.stringify(rs) + '</code>');
       });
 
       // drop the table and close the db
       this.log('executing DROP');
-      this.exec(drop.toString());
+      this.exec(drop);
     }
     catch (err) {
       Logger.error(err.message);
     }
   },
+  isOpen: function () {
+    return this.db && typeof this.db !== 'undefined';
+  },
   open: function (name, location) {
+    if (this.isOpen()) {
+      // singleton db object
+      return;
+    }
+
     try {
       // open the database and create the main table if it doesn't EXISTS
       this.db = window.sqlitePlugin.openDatabase({name: name, location: location});
-      this.exec('CREATE TABLE IF NOT EXISTS GPSCoordinates (poll DATETIME, latitude TEXT, longitude TEXT)');
       this.log('opened a connection to the db');
     }
     catch (err) {
@@ -71,6 +78,17 @@ var Sqlite = {
       return;
     }
 
+    // if sql is not null and is a SqliteQuery object, set sql to its sql text
+    if (sql && sql instanceof SqliteQuery) {
+      sql = sql.toString();
+    }
+
+    // if there is no sql to exec, return
+    if (!sql || typeof sql !== 'string' || sql.length === 0) {
+      this.error('sql was empty');
+      return;
+    }
+
     this.db.transaction(function(tx) {
       tx.executeSql(sql, [], function (tx, rs) {
           if (resultCallback && typeof resultCallback === 'function') {
@@ -79,8 +97,8 @@ var Sqlite = {
           }
       });
     },
-    function(err) {
-      Sqlite.error('db error: ' + err.message);
+    function  (err) {
+      throw err;
     });
   }
 };

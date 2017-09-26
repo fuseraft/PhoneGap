@@ -72,13 +72,17 @@
                         <div class="content-block">
                             <!--<p>Page content goes here</p>-->
                             <div class="buttons-row">
-                              <button id="clearlog" class="button">Clear Log</button>
-                              <button id="startbackground" class="button">Start Background</button>
-                              <button id="location" class="button">Log Location</button>
+                              <button id="btn-clear-log" class="button">Clear Log</button>
+                              <button id="btn-start-background" class="button">Start Background</button>
+                              <button id="btn-log-location" class="button">Log Location</button>
                             </div>
                             <div class="buttons-row">
-                              <button id="emailLog" class="button">Email log</button>
-                              <button id="test-sqlite" class="button">Test SQLite</button>
+                              <button id="btn-email-log" class="button">Email Log</button>
+                              <button id="btn-test-sqlite" class="button">Test SQLite</button>
+                            </div>
+                            <div class="buttons-row">
+                              <button id="btn-write-sqlite" class="button">Write to SQLite</button>
+                              <button id="btn-read-sqlite" class="button">Read from SQLite</button>
                             </div>
                             <div id="log"></div>
                             <!-- Link to another page -->
@@ -104,6 +108,7 @@
     <script type="text/javascript" src="js/background-service.js?v=20170923001scs"></script>
     <script type="text/javascript" src="js/sqlite/sqlite-params.js?v=20170924002scs"></script>
     <script type="text/javascript" src="js/sqlite/sqlite.js"></script>
+    <script type="text/javascript" src="js/geolocation.js"></script>
     <script type="text/javascript" src="js/polling.js"></script>
     <script type="text/javascript" src="js/my-app.js"></script>
 </body>

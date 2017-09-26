@@ -7,40 +7,65 @@ var $$ = Dom7;
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
   try {
-    $$('#clearlog').on('click', function () {
+    $$('#btn-clear-log').on('click', function () {
       $$('#log div').remove();
     });
 
     // open email client to attach cords.
-    $$('#emailLog').on('click',function(){
-      var theLog = document.getElementById("log").innerText.toString();
+    $$('#btn-email-log').on('click',function(){
+      var theLog = $$('#log').text();
       console.log(theLog);
-      window.open('mailto:shortdude18@gmail.com?subject=Cords&body='+theLog);
+      window.open('mailto:shortdude18@gmail.com?subject=Cords&body=' + theLog);
     });
 
     // user clicked the Get Location button
-    $$('#location').on('click', function() {
+    $$('#btn-log-location').on('click', function() {
       if (Poll.listener) {
         Poll.stop();
-        $$('#location').text('Log Location');
+        $$('#btn-log-location').text('Log Location');
       }
       else {
-        Poll.start(Poll.getCoordinates, true);
-        $$('#location').text('Logging Location...');
+        Poll.start(Geolocation.getCoordinates, true);
+        $$('#btn-log-location').text('Logging Location...');
       }
     });
 
-    $$('#startbackground').on('click', function () {
+    $$('#btn-start-background').on('click', function () {
       Background.toggleStatus();
 
       var status = !!Background.getStatus();
       var text = !status ? 'Start Background' : 'Stop Background';
 
-      $$('#startbackground').text(text);
+      $$('#btn-start-background').text(text);
     });
 
-    $$('#test-sqlite').on('click', function () {
+    $$('#btn-test-sqlite').on('click', function () {
       Sqlite.test();
+    });
+
+    $$('#btn-start-background').on('click', function () {
+      Background.toggleStatus();
+
+      var status = !!Background.getStatus();
+      var text = !status ? 'Start Background' : 'Stop Background';
+
+      $$('#btn-start-background').text(text);
+    });
+
+    $$('#btn-write-sqlite').on('click', function () {
+      Geolocation.toggleSqliteWrite();
+
+      $$('#btn-write-sqlite').text(
+        Geolocation.canWriteToSqlite()
+        ? 'Writing to SQLite'
+        : 'Write to SQLite'
+      );
+    });
+
+    $$('#btn-read-sqlite').on('click', function () {
+      Geolocation.readCoordinates(function (rs) {
+        Sqlite.log('result set: <code>' + JSON.stringify(rs) + '</code>');
+      });
     });
   } catch (err) {
       Logger.log('ERROR: ' + err.message);

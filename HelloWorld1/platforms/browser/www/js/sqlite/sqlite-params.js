@@ -91,7 +91,7 @@ SqliteParams.prototype.parameterize = function (query) {
       i = 0,
       len = this.params.length;
 
-  if (!query || !query.toString || typeof query.toString !== 'function' || query.toString().length === 0) {
+  if (!query || !(query instanceof SqliteQuery) || query.toString().length === 0) {
     throw new Error('query is empty');
   }
 
