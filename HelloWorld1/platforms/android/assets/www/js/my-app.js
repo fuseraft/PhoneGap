@@ -4,83 +4,18 @@ var myApp = new Framework7();
 // If we need to use custom DOM library, let's save it to $$ variable:
 var $$ = Dom7;
 
+function bindClick(btn, handler) {
+  $$(btn).on('click', handler);
+}
+
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
   try {
-    $$('#btn-clear-log').on('click', function () {
-      $$('#log div').remove();
-    });
-
-    // open email client to attach cords.
-    $$('#btn-email-log').on('click',function(){
-      var theLog = $$('#log').text();
-      console.log(theLog);
-      window.open('mailto:shortdude18@gmail.com?subject=Cords&body=' + theLog);
-    });
-
-    // user clicked the Get Location button
-    $$('#btn-log-location').on('click', function() {
-      if (Poll.listener) {
-        Poll.stop();
-        $$('#btn-log-location').text('Log Location');
-      }
-      else {
-        Poll.start(Geolocation.getCoordinates, true);
-        $$('#btn-log-location').text('Logging Location...');
-      }
-    });
-
-    $$('#btn-start-background').on('click', function () {
-      Background.toggleStatus();
-
-      var status = !!Background.getStatus();
-      var text = !status ? 'Start Background' : 'Stop Background';
-
-      $$('#btn-start-background').text(text);
-    });
-
-    $$('#btn-test-sqlite').on('click', function () {
-      try {
-        GpsJson.testExternalFile();
-        //Sqlite.test();
-      }
-      catch (err) {
-        Logger.error(err.message);
-      }
-    });
-
-    $$('#btn-start-background').on('click', function () {
-      Background.toggleStatus();
-
-      var status = !!Background.getStatus();
-      var text = !status ? 'Start Background' : 'Stop Background';
-
-      $$('#btn-start-background').text(text);
-    });
-
-    $$('#btn-write-sqlite').on('click', function () {
-      // Geolocation.resetCoordinates();
-      Geolocation.toggleSqliteWrite();
-
-      $$('#btn-write-sqlite').text(
-        Geolocation.canWriteToSqlite()
-        ? 'Writing to SQLite'
-        : 'Write to SQLite'
-      );
-    });
-
-    $$('#btn-read-sqlite').on('click', function () {
-      try {
-        GpsJson.writeJson(
-          'gps-' +
-          (new Date(Date.now()).toSqliteString())
-            .replace(/\.| |-|:|/g, '') + 
-          '.json');
-      }
-      catch (err) {
-        Logger.error(err.message);
-      }
-    });
+    bindClick('#btn-clear-log', AppFunc.clearLog);
+    bindClick('#btn-log-location', AppFunc.getLocation);
+    bindClick('#btn-start-background', AppFunc.toggleBackground);
+    bindClick('#btn-write-sqlite', AppFunc.writeGPS);
+    bindClick('#btn-read-sqlite', AppFunc.readGPS);
   } catch (err) {
       Logger.error(err.message);
   }

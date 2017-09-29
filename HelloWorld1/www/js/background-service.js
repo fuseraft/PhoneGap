@@ -1,6 +1,6 @@
 var Background = {
   _isInitialized: false,
-  _status: 0,
+  _status: false,
   enable: function () {
     Logger.log('enabling background mode');
     cordova.plugins.backgroundMode.setEnabled(true);
@@ -34,19 +34,19 @@ var Background = {
     this.enable();
     this.enableQuirksMode();
 
-    this._status = 1;
+    this._status = true;
   },
   stop: function () {
     Logger.log('stopping background mode');
 
     this.disable();
 
-    this._status = 0;
+    this._status = false;
   },
   toggleStatus: function () {
     Logger.log('toggling background mode');
 
-    if (!!this._status) {
+    if (this._status) {
       this.stop();
     }
     else {

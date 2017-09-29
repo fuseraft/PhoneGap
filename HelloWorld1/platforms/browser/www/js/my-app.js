@@ -4,111 +4,23 @@ var myApp = new Framework7();
 // If we need to use custom DOM library, let's save it to $$ variable:
 var $$ = Dom7;
 
+function bindClick(btn, handler) {
+  $$(btn).on('click', handler);
+}
+
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
   try {
-    $$('#btn-clear-log').on('click', function () {
-      $$('#log div').remove();
-    });
-
-    // open email client to attach cords.
-    $$('#btn-email-log').on('click',function(){
-      var theLog = $$('#log').text();
-      console.log(theLog);
-      window.open('mailto:shortdude18@gmail.com?subject=Cords&body=' + theLog);
-    });
-
-    // user clicked the Get Location button
-    $$('#btn-log-location').on('click', function() {
-      if (Poll.listener) {
-        Poll.stop();
-        $$('#btn-log-location').text('Log Location');
-      }
-      else {
-        Poll.start(Geolocation.getCoordinates, true);
-        $$('#btn-log-location').text('Logging Location...');
-      }
-    });
-
-    $$('#btn-start-background').on('click', function () {
-      Background.toggleStatus();
-
-      var status = !!Background.getStatus();
-      var text = !status ? 'Start Background' : 'Stop Background';
-
-      $$('#btn-start-background').text(text);
-    });
-
-    $$('#btn-test-sqlite').on('click', function () {
-      Sqlite.test();
-    });
-
-    $$('#btn-start-background').on('click', function () {
-      Background.toggleStatus();
-
-      var status = !!Background.getStatus();
-      var text = !status ? 'Start Background' : 'Stop Background';
-
-      $$('#btn-start-background').text(text);
-    });
-
-    $$('#btn-write-sqlite').on('click', function () {
-      // Geolocation.resetCoordinates();
-      Geolocation.toggleSqliteWrite();
-
-      $$('#btn-write-sqlite').text(
-        Geolocation.canWriteToSqlite()
-        ? 'Writing to SQLite'
-        : 'Write to SQLite'
-      );
-    });
-
-    $$('#btn-read-sqlite').on('click', function () {
-      Geolocation.readCoordinates(function (rs) {
-        // iterate the table data and build a Framework7 plain datatable
-        try {
-          var i, len = rs.rows.length, row, data = '';
-
-          data +=
-            '<thead>\
-              <tr>\
-                <th class="label-cell">Poll</th>\
-                <th class="label-cell">Lat</th>\
-                <th class="label-cell">Long</th>\
-              </tr>\
-            </thead>\
-            <tbody>'
-
-          for (i = 0; i < len; i++) {
-            row = rs.rows.item(i);
-            data +=
-              '<tr>' +
-                '<td class="label-cell">' + row.Poll + '</td>' +
-                '<td class="numeric-cell">' + row.Latitude + '</td>' +
-                '<td class="numeric-cell">' + row.Longitude + '</td>' +
-              '</tr>';
-          }
-
-          data += '</tbody>';
-
-          data =
-            '<div class="data-table">' +
-              '<table>' +
-                data +
-              '</table>' +
-            '</div>';
-
-          Sqlite.log(
-            '<div class="data-table"><table>' + data + '</table>');
-        }
-        catch (err) {
-          Sqlite.error(err.message);
-        }
-      });
-    });
+    bindClick('#btn-clear-log', AppFunc.clearLog);
+    bindClick('#btn-log-location', AppFunc.getLocation);
+    bindClick('#btn-start-background', AppFunc.toggleBackground);
+    bindClick('#btn-write-sqlite', AppFunc.writeGPS);
+    bindClick('#btn-read-sqlite', AppFunc.readGPS);
   } catch (err) {
-      Logger.log('ERROR: ' + err.message);
+      Logger.error(err.message);
   }
+
+  //myApp.alert('writing Geolocation data to ' + cordova.file.applicationStorageDirectory);
 }, false);
 
 // Add view
