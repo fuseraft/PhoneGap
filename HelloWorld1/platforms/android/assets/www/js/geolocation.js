@@ -51,7 +51,7 @@ var Geolocation = {
 
     // create the table if it doesn't exist
     Sqlite.exec(
-      'CREATE TABLE IF NOT EXISTS GPSCoordinates (Poll DATETIME, Latitude TEXT, Longitude TEXT)'
+      'CREATE TABLE IF NOT EXISTS GPSCoordinates ( DATETIME, Latitude TEXT, Longitude TEXT)'
     );
   },
   writeCoordinates: function (time, lat, long) {
@@ -63,13 +63,13 @@ var Geolocation = {
 
       // build an insert statement
       insert = new SqliteQuery(
-        'INSERT INTO GPSCoordinates (Poll, Latitude, Longitude) ' +
-        'VALUES (@Poll, @Lat, @Long)'
+        'INSERT INTO GPSCoordinates (, Latitude, Longitude) ' +
+        'VALUES (@, @Lat, @Long)'
       );
 
       // build parameters
       params = new SqliteParams();
-      params.add('@Poll', SqliteTypes.DATETIME, time);
+      params.add('@', SqliteTypes.DATETIME, time);
       params.add('@Lat', SqliteTypes.TEXT, lat);
       params.add('@Long', SqliteTypes.TEXT, long);
       params.parameterize(insert);

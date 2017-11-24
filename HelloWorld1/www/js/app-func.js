@@ -12,7 +12,23 @@ var AppFunc = {
 
     $$('#btn-start-background').text(text);
   },
+  _gpsWatchInterval: null,
+  getLocationWatch: function () {
+    if (_gpsWatchInterval) {
+      navigator.geolocation.clearWatch(_gpsWatchInterval);
+      $$('#btn-log-location').text('Log Location');
+    }
+    else {
+      _gpsWatchInterval = Geolocation.watchPosition();
+      $$('#btn-log-location').text('Logging Location...');
+    }
+  },
   getLocation: function () {
+    if ($$('#chk-use-watch').is(':checked')) {
+      AppFunc.getLocationWatch();
+      return;
+    }
+
     if (Poll.listener) {
       Poll.stop();
       $$('#btn-log-location').text('Log Location');
