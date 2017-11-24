@@ -147,7 +147,10 @@ var Geolocation = {
       Geolocation.error(err.message);
     }
   },
+  watchCoordinates: function () {
+    return navigator.geolocation.watchPosition(Geolocation.onSuccess, Geolocation.onError, { enableHighAccuracy: true, timeout: 5000 });
+  },
   getCoordinates: function () {
-    navigator.geolocation.getCurrentPosition(Geolocation.onSuccess, Geolocation.onError);
+    navigator.geolocation.getCurrentPosition(Geolocation.onSuccess, Geolocation.onError, { enableHighAccuracy: true, timeout: 5000 });
   }
 };

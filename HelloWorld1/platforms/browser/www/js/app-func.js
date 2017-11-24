@@ -12,13 +12,16 @@ var AppFunc = {
 
     $$('#btn-start-background').text(text);
   },
+  _gpsWatchInterval: null,
   getLocation: function () {
-    if (Poll.listener) {
-      Poll.stop();
+    if (_gpsWatchInterval) {
+      navigator.geolocation.clearWatch(_gpsWatchInterval);
+      //Poll.stop();
       $$('#btn-log-location').text('Log Location');
     }
     else {
-      Poll.start(Geolocation.getCoordinates, true);
+      _gpsWatchInterval = Geolocation.watchPosition();
+      //Poll.start(Geolocation.getCoordinates, true);
       $$('#btn-log-location').text('Logging Location...');
     }
   },
