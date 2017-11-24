@@ -12,9 +12,12 @@ var AppFunc = {
 
     $$('#btn-start-background').text(text);
   },
-  _gpsWatchInterval: null,
+/*  _gpsWatchInterval: null,
   getLocationWatch: function () {
     if (_gpsWatchInterval) {
+      if ($$('#chk-use-watch').hasClass('disabled')) {
+        $$('#chk-use-watch').removeClass('disabled');
+      }
       navigator.geolocation.clearWatch(_gpsWatchInterval);
       $$('#btn-log-location').text('Log Location');
     }
@@ -22,12 +25,13 @@ var AppFunc = {
       _gpsWatchInterval = Geolocation.watchPosition();
       $$('#btn-log-location').text('Logging Location...');
     }
-  },
+  },*/
   getLocation: function () {
-    if ($$('#chk-use-watch').is(':checked')) {
+    /*if ($$('#chk-use-watch').is(':checked')) {
+      $$('#chk-use-watch').addClass('disabled');
       AppFunc.getLocationWatch();
       return;
-    }
+    }*/
 
     if (Poll.listener) {
       Poll.stop();
